@@ -7,7 +7,7 @@ describe Oystercard do
   let(:station2){double(:station)}
   let(:min_fare){described_class::MIN_FARE}
   let(:min_balance){described_class::MIN_BALANCE}
-  let(:journey){{entry_station: station, exit_station: station2}}
+  let(:journey){{entry_station: station, exit_station: station}}
 
   describe '#Initialize' do
     it 'has an empty list of journeys by default' do
@@ -44,14 +44,7 @@ describe Oystercard do
       expect(oystercard.in_journey?).to eq true
     end
 
-    it 'reports when oystercard is not in use' do
-      allow(oystercard).to receive(:balance) { 2 }
-      oystercard.touch_in(station)
-      oystercard.touch_out(station2)
-      expect(oystercard.in_journey?).to eq false
-    end
-
-    it 'reports initialized oystercard not in use' do
+    it 'reports oystercard not in use' do
       expect(oystercard.in_journey?).to eq false
     end
 
@@ -75,8 +68,8 @@ describe Oystercard do
     it "records current journey" do
       oystercard.top_up(min_balance)
       oystercard.touch_in(station)
-      oystercard.touch_out(station2)
-      oystercard.journey_log.last.should include(journey)
+      oystercard.touch_out(station)
+      oystercard.journey_log.should include(journey)
     end
 
   end
