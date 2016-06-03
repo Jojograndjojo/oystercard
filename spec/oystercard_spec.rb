@@ -3,10 +3,21 @@ require 'oystercard'
 describe Oystercard do
   subject(:oystercard) {described_class.new}
 
+  let(:station){double(:station)}
+  let(:min_fare){Journey::MIN_FARE}
+  let(:min_balance){described_class::MIN_BALANCE}
+  let(:journey){{entry_station: station, exit_station: station}}
+
+  describe '#Initialize' do
+    it 'has an empty list of journeys by default' do
+      expect{(oystercard.journey_log).to respond_to(:each)}
+    end
+  end
+
   describe '#balance' do
 
     it 'allows user to see starting balance of zero' do
-      expect(oystercard.balance).to eq 0
+      expect{(oystercard.balance).to respond_to(:even?)}
     end
 
   end
@@ -24,29 +35,20 @@ describe Oystercard do
 
   end
 
-  describe '#deduct' do
-
-  	it 'deducts money from oystercard' do
-  		expect{oystercard.deduct(1)}.to change{oystercard.balance}.by -1
-  	end
-
-  end
-
-  describe '#in_journey?' do
-    it 'reports when oystercard is in use' do
-      oystercard.touch_in
-      expect(oystercard.in_journey?).to eq true
-    end
-
-    it 'reports when oystercard is not in use' do
-      oystercard.touch_in
-      oystercard.touch_out
-      expect(oystercard.in_journey?).to eq false
-    end
-
-    it 'reports initialized oystercard not in use' do
-      expect(oystercard.in_journey?).to eq false
+  describe '#touch_in' do
+    it "does not let through a card with a balance lesser than the minimum balance " do
+      expect{oystercard.touch_in(station)}.to raise_error('Insufficient balance.')
     end
   end
 
+
+  describe '#touch_out' do
+    it "deducts fare when touching out" do
+      oystercard.top_up(min_balance)
+      oystercard.touch_in(station)
+      expect{oystercard.touch_out(station)}.to change{oystercard.balance}.by -min_fare
+    end
+
+  end
 end
+
