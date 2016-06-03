@@ -35,21 +35,6 @@ describe Oystercard do
 
   end
 
-
-  # describe '#in_journey?' do
-  #   it 'reports when oystercard is in use' do
-  #     allow(oystercard).to receive(:balance) { 2 }
-  #     oystercard.touch_in(station)
-  #     expect(oystercard.in_journey?).to be true
-  #   end
-
-  #   it 'reports oystercard not in use' do
-  #     expect(oystercard.in_journey?).to be false
-  #   end
-
-  # end
-
-
   describe '#touch_in' do
     it "does not let through a card with a balance lesser than the minimum balance " do
       expect{oystercard.touch_in(station)}.to raise_error('Insufficient balance.')
@@ -63,13 +48,6 @@ describe Oystercard do
       oystercard.touch_in(station)
       expect{oystercard.touch_out(station)}.to change{oystercard.balance}.by -min_fare
     end
-
-    # it "records current journey" do
-    #   oystercard.top_up(min_balance)
-    #   oystercard.touch_in(station)
-    #   oystercard.touch_out(station)
-    #   oystercard.journey_log.should include(journey)
-    # end
 
   end
 end

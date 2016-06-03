@@ -26,10 +26,18 @@ let(:station){double(:station)}
   end
 
   describe '#complete' do
-    it {should respond_to(:complete)}
 
-    it 'should return whether or not the journey is complete' do
-    expect(journey.complete).to be_in([true, false])
+    it 'should return true if the journey is complete' do
+    journey.start(station)
+    journey.finish(station)
+    expect(journey.complete).to be true
+    end
+
+    it 'should return false if the journey is not complete' do
+    journey.start(station)
+    journey.finish(station)
+    journey.finish(station)
+    expect(journey.complete).to be false
     end
 
   end
